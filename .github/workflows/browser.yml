@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Validate persistent storage and backup boundaries
-        run: node --experimental-default-type=module --test tests/browser-storage.test.js
+        run: node --test tests/browser-storage.test.js
       - name: Install pinned browser test tooling
         run: |
           npm install --no-save --package-lock=false playwright@1.63.0
@@ -32,6 +32,10 @@ jobs:
           cp static/style.css static/favicon.svg .browser-public/static/
           python -m http.server 8765 --bind 127.0.0.1 --directory .browser-public > /tmp/campus-browser-server.log 2>&1 &
       - name: Exercise real browser flows
+        run: node scripts/check-browser.mjs
+      - name: Verify the deployed free browser edition
+        env:
+          BROWSER_APP_URL: https://vishnu-campustrack-browser.onrender.com
         run: node scripts/check-browser.mjs
       - name: Preserve desktop and mobile verification images
         if: always()
