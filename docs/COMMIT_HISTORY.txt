@@ -1,0 +1,5 @@
+cf31013 chore: initialize project license and safe configuration
+7f93b31 feat: implement accounts and isolated application API
+5791309 feat: add responsive interactive application interface
+1d10d9f test: cover boundary cases and add deployment configuration
+662bc8b docs: explain architecture and interview trade-offs; record verified release
