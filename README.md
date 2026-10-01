@@ -2,7 +2,7 @@
 
 A personal internship application tracker with real accounts and a relational database.
 
-**Source:** published on GitHub. **Live demo:** deployment pending.
+**Source:** published on GitHub. **Live demo:** database ready; final Render connection pending.
 
 [Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/screenshot-mobile.png)
 
@@ -61,7 +61,9 @@ The included GitHub Actions workflow is configured to run these tests on pushes 
 
 ## Deploy
 
-`render.yaml` describes a Render Python web service with one worker. Connect this GitHub repository and review the service settings before creating it. The manifest requests the free web-service plan and does not create paid resources. Availability and provider terms should be checked at deployment time. Deployment has not been performed.
+[Complete the prepared Render deployment](https://render.com/deploy?repo=https://github.com/me-vishnurnair/campustrack) · [Deployment and recovery guide](docs/DEPLOYMENT.md)
+
+`render.yaml` creates a free Python service in Singapore, references the existing `vishnu-campustrack-db` database, derives the HTTPS origin from Render and waits for passing CI before automatic deployments. This Blueprint targets the owner's existing workspace; other users must update the database reference. The remaining dashboard action connects the service without copying credentials into source or chat.
 
 Alternatively, build the included Dockerfile and run the container with the required environment variables. Production traffic should be served over HTTPS.
 
@@ -75,7 +77,7 @@ Alternatively, build the included Dockerfile and run the container with the requ
 | COOKIE_SECURE | false locally | true |
 | PORT | supplied to Uvicorn | Provided by host |
 
-Production startup refuses an insecure cookie/origin configuration or a local SQLite database. Supply a real PostgreSQL database before publishing. This avoids pretending that a web service's temporary filesystem is durable storage. No database or billable resource was provisioned.
+Production startup refuses an insecure cookie/origin configuration or a local SQLite database. Supply a real PostgreSQL database before publishing. This avoids pretending that a web service's temporary filesystem is durable storage. The free PostgreSQL database has been provisioned and expires on 31 October 2026. The web service still needs the Blueprint deployment. No paid plan has been enabled.
 
 ### Limits
 

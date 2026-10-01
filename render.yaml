@@ -1,8 +1,14 @@
+# Deployment for Vishnu's existing Render workspace.
+# The PostgreSQL instance is referenced, never duplicated or embedded in source.
 services:
   - type: web
-    name: campustrack
+    name: vishnu-campustrack
     runtime: python
+    region: singapore
     plan: free
+    repo: https://github.com/me-vishnurnair/campustrack
+    branch: main
+    autoDeployTrigger: checksPass
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --workers 1
     healthCheckPath: /healthz
@@ -12,8 +18,13 @@ services:
       - key: APP_ENV
         value: production
       - key: APP_ORIGIN
-        sync: false
+        fromService:
+          type: web
+          name: vishnu-campustrack
+          envVarKey: RENDER_EXTERNAL_URL
       - key: COOKIE_SECURE
         value: "true"
       - key: DATABASE_URL
-        sync: false
+        fromDatabase:
+          name: vishnu-campustrack-db
+          property: connectionString
