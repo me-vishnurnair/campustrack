@@ -2,7 +2,7 @@
 
 A personal internship application tracker with real accounts and a relational database.
 
-**Status:** implemented and checked locally. GitHub upload and public deployment are awaiting approval. **Live demo:** not deployed; no URL claimed.
+**Status:** implemented and checked locally. Public publication is approved; GitHub upload and deployment are blocked on account access. **Live demo:** not deployed; no URL claimed.
 
 ## Features
 
