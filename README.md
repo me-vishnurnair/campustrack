@@ -2,11 +2,13 @@
 
 A personal internship application tracker with real accounts and a relational database.
 
-**Status:** local implementation verified. **Live demo:** deployment pending.
+**Source:** published on GitHub. **Live demo:** deployment pending.
 
 [Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/screenshot-mobile.png)
 
 ![Desktop preview](docs/screenshot-desktop.png)
+
+[![Python tests](https://github.com/me-vishnurnair/campustrack/actions/workflows/tests.yml/badge.svg)](https://github.com/me-vishnurnair/campustrack/actions/workflows/tests.yml)
 
 ## Features
 
@@ -28,7 +30,7 @@ Account isolation is part of the data model.
 | Durable hosted storage | SQLite keeps local setup small; production requires PostgreSQL instead of a temporary server filesystem. |
 | CSV as an input boundary | Exported user text is handled to reduce spreadsheet formula injection. |
 
-**Recorded local verification:** 4 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). Hosted CI and deployment checks are still pending.
+**Recorded local verification:** 4 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). GitHub Actions passed on the published code. Live deployment checks are still pending.
 
 ## Tech stack
 
@@ -55,11 +57,11 @@ Open **http://127.0.0.1:8000**. Interactive API documentation is at **/docs**, a
 .venv\Scripts\python -m pytest -q
 ```
 
-The included GitHub Actions workflow is configured to run these tests on pushes and pull requests; a hosted run has not yet been verified. Direct dependencies are pinned to the versions tested for this release.
+The included GitHub Actions workflow is configured to run these tests on pushes and pull requests; the published code passed its first hosted run. Direct dependencies are pinned to the versions tested for this release.
 
 ## Deploy
 
-`render.yaml` describes a Render Python web service with one worker. Connect the eventual GitHub repository and review the service settings before creating it. The manifest requests the free web-service plan and does not create paid resources. Availability and provider terms should be checked at deployment time. Deployment has not been performed.
+`render.yaml` describes a Render Python web service with one worker. Connect this GitHub repository and review the service settings before creating it. The manifest requests the free web-service plan and does not create paid resources. Availability and provider terms should be checked at deployment time. Deployment has not been performed.
 
 Alternatively, build the included Dockerfile and run the container with the required environment variables. Production traffic should be served over HTTPS.
 
