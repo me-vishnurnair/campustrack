@@ -2,6 +2,12 @@ import assert from 'node:assert/strict';
 import {mkdir,readFile} from 'node:fs/promises';
 import {chromium} from 'playwright';
 const origin=process.env.BROWSER_APP_URL||'http://127.0.0.1:8765';
+let ready=false;
+for(let attempt=0;attempt<20;attempt++){
+  try {const response=await fetch(origin);if(response.ok){ready=true;break;}}catch{}
+  await new Promise(resolve=>setTimeout(resolve,500));
+}
+assert.equal(ready,true,'Browser site did not become ready');
 const browser=await chromium.launch();
 const context=await browser.newContext({viewport:{width:1440,height:1000},acceptDownloads:true});
 const page=await context.newPage();
