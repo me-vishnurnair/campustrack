@@ -1,5 +1,7 @@
 # Free browser edition
 
+**[Open the free live app ↗](https://vishnu-campustrack-browser.onrender.com)** · [Passing browser checks](https://github.com/me-vishnurnair/campustrack/actions/runs/36870651776)
+
 This edition runs on static hosting and stores application records in the visitor's browser. It has no server database, password or account requirement. The Python/PostgreSQL account edition remains in `app/` and `static/`.
 
 ## Use

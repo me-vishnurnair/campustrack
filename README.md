@@ -2,7 +2,9 @@
 
 A personal internship application tracker with real accounts and a relational database.
 
-**Free browser edition:** deployment in progress. **Account edition:** [live on Render](https://vishnu-campustrack.onrender.com), backed by a free trial database that expires on 31 October 2026.
+**[Free browser edition ↗](https://vishnu-campustrack-browser.onrender.com)** — saved on your browser/device, with JSON backup and restore. **Account edition:** [live on Render](https://vishnu-campustrack.onrender.com), backed by a free trial database that expires on 31 October 2026.
+
+[![Browser edition checks](https://github.com/me-vishnurnair/campustrack/actions/workflows/browser.yml/badge.svg)](https://github.com/me-vishnurnair/campustrack/actions/workflows/browser.yml)
 
 [Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/screenshot-mobile.png)
 
@@ -34,7 +36,7 @@ Account isolation is part of the data model.
 | Durable hosted storage | SQLite keeps local setup small; production requires PostgreSQL instead of a temporary server filesystem. |
 | CSV as an input boundary | Exported user text is handled to reduce spreadsheet formula injection. |
 
-**Recorded local verification:** 4 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). GitHub Actions passed on the published code. Live deployment checks are still pending.
+**Recorded local verification:** 4 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). GitHub Actions passed on the published code. The account edition passed [live API checks](https://github.com/me-vishnurnair/portfolio/actions/runs/36870538339), including login/logout, CRUD, owner isolation, secure cookies, CSRF rejection and CSV export. The browser edition passed five storage-boundary tests plus [real Chromium checks locally and on its live deployment](https://github.com/me-vishnurnair/campustrack/actions/runs/36870651776), including persistence, backup/restore, data isolation and mobile layout.
 
 ## Tech stack
 
@@ -67,7 +69,7 @@ The included GitHub Actions workflow is configured to run these tests on pushes 
 
 [Complete the prepared Render deployment](https://render.com/deploy?repo=https://github.com/me-vishnurnair/campustrack) · [Deployment and recovery guide](docs/DEPLOYMENT.md)
 
-`render.yaml` creates a free Python service in Singapore, references the existing `vishnu-campustrack-db` database, derives the HTTPS origin from Render and waits for passing CI before automatic deployments. This Blueprint targets the owner's existing workspace; other users must update the database reference. The remaining dashboard action connects the service without copying credentials into source or chat.
+`render.yaml` creates a free Python service in Singapore, references the existing `vishnu-campustrack-db` database, derives the HTTPS origin from Render and waits for passing CI before automatic deployments. This Blueprint targets the owner's existing workspace; other users must update the database reference. The Blueprint is now deployed and connects the service without copying credentials into source or chat.
 
 Alternatively, build the included Dockerfile and run the container with the required environment variables. Production traffic should be served over HTTPS.
 
@@ -81,7 +83,7 @@ Alternatively, build the included Dockerfile and run the container with the requ
 | COOKIE_SECURE | false locally | true |
 | PORT | supplied to Uvicorn | Provided by host |
 
-Production startup refuses an insecure cookie/origin configuration or a local SQLite database. Supply a real PostgreSQL database before publishing. This avoids pretending that a web service's temporary filesystem is durable storage. The free PostgreSQL database has been provisioned and expires on 31 October 2026. The web service still needs the Blueprint deployment. No paid plan has been enabled.
+Production startup refuses an insecure cookie/origin configuration or a local SQLite database. Supply a real PostgreSQL database before publishing. This avoids pretending that a web service's temporary filesystem is durable storage. The free PostgreSQL database has been provisioned and expires on 31 October 2026. The account web service is deployed and verified. No paid plan has been enabled.
 
 ### Limits
 

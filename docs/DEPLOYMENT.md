@@ -1,33 +1,32 @@
-# Complete the CampusTrack deployment
+# CampusTrack hosting and recovery
 
-Status on 1 October 2026: source and CI are published. The PostgreSQL database is available in the owner's Render workspace; the CampusTrack web service is not deployed yet.
+Both editions are deployed on free plans.
 
-## One dashboard action
+- **Primary browser edition:** https://vishnu-campustrack-browser.onrender.com
+- **Original account edition:** https://vishnu-campustrack.onrender.com
 
-[Open the prepared Render deployment](https://render.com/deploy?repo=https://github.com/me-vishnurnair/campustrack).
+## Long-term free demo
 
-1. Select **My Workspace**, which already contains **vishnu-campustrack-db**.
-2. Review the Blueprint. It creates one free Python web service, **vishnu-campustrack**, in Singapore and references the existing database. It does not create a second database.
-3. Click **Deploy Blueprint**.
+The browser edition uses static hosting and has no server database to expire. Records stay on the same browser/device; download **Backup JSON** before clearing site data or changing devices. **Restore backup** validates the data before asking to replace the current board. The fictional sample leaves your saved board untouched. [Full browser-edition guide](../browser/README.md).
 
-Render supplies the database connection internally and sets the application origin from its assigned HTTPS URL. There is no password or connection URL to paste into chat or GitHub. The connected Render tool cannot create a Blueprint or retrieve database connection credentials; this dashboard action is required to finish that connection.
+Source: `browser/`. Static build copies the index and JavaScript modules along with the original CSS/favicon into `public/`. Its Render auto-deploy is off; use **Manual Deploy → Deploy latest commit** to publish a reviewed update. No recurring redeployment is needed merely to keep it hosted.
 
-For another workspace, first create a PostgreSQL database and change the reference name in `render.yaml` to its name. Keep the service and database in the same region.
+## Account edition
 
-## Verify before publishing a demo link
+The prepared Blueprint has been deployed in **My Workspace**. It references **vishnu-campustrack-db**, sets the origin from Render's own HTTPS URL, keeps cookies secure, uses one Python worker and waits for passing CI before deploying source updates. Credentials stay in Render; do not copy them into source or chat.
 
-After the deployment is Live, open `/healthz` and expect `{"status":"ok"}`. This endpoint executes a database query. Then verify registration, sign-out/sign-in, application create/edit/delete, CSV export, and account isolation with disposable test data. Publish the assigned URL only after these checks pass.
+The live account edition passed database health, registration/login/logout, CRUD, owner isolation, secure-cookie, CSRF and CSV-export checks on 1 October 2026. [Verification run](https://github.com/me-vishnurnair/portfolio/actions/runs/36870538339).
 
-## Hosting lifecycle
+This free PostgreSQL database expires on **31 October 2026 at 05:41 UTC / 11:11 India time**. Export any useful records before expiry. Waking or restarting the web service does not extend the database trial. The browser edition remains independent of this database.
 
-The current free database expires on **31 October 2026 at 05:41 UTC (11:11 India time)**. It has no backups. Upgrade it before expiry or migrate and verify a durable replacement; export useful application records as CSV beforehand. Free web services also sleep after 15 minutes without traffic and share a monthly runtime allowance.
+## Sleeping, quotas and recovery
 
-For continuous hosting, the current entry paid tiers are `0.5c-512mb` for each web service and `0.1c-256mb` for PostgreSQL. Do not change this Blueprint to a paid plan without the owner's explicit billing approval. Account for database storage, taxes and usage charges in addition to compute.
+A free Python service sleeps after 15 minutes without traffic and wakes automatically on the next visit, usually taking about a minute. Opening its URL is enough; avoid repeated refreshes. Static sites have no Python startup delay.
 
-Provider references: [Blueprint specification](https://render.com/docs/blueprint-spec), [free-plan limits](https://render.com/docs/free), [pricing](https://render.com/pricing).
+The free Python services share 750 monthly runtime hours; do not add keep-alive pings. If the runtime allowance is exhausted, service resumes after the monthly reset. A manual restart does not replenish the allowance. Bandwidth and build limits also apply.
 
-## Recovery
+All deployments use free plans. No paid plan has been enabled. Account-wide billing controls are unavailable through the connector; review the Render Billing page if a payment method is already attached.
 
-If startup fails, inspect Render's deployment logs. Keep the production checks enabled: an HTTPS origin, secure cookies and PostgreSQL are required. Never substitute SQLite on a temporary server filesystem. The `/healthz` readiness check will fail if the database is unavailable.
+For failed builds or errors, inspect CI and Render deployment logs and restore the previous successful release. Keep production HTTPS/cookie/PostgreSQL checks enabled for the account edition. `create_all` initializes tables and is not a migration system; review and back up data before schema changes.
 
-If a code change fails, keep or roll back to the previous successful deployment and inspect the failed CI run. The Blueprint waits for passing GitHub checks before auto-deploying source updates. `create_all` only initializes tables; review and back up data before schema changes.
+[Render free limits](https://render.com/docs/free) · [Deployment behavior](https://render.com/docs/deploys)
