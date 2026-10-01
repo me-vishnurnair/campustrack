@@ -1,0 +1,43 @@
+name: Browser edition checks
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  browser:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate persistent storage and backup boundaries
+        run: node --experimental-default-type=module --test tests/browser-storage.test.js
+      - name: Install pinned browser test tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.63.0
+          npx playwright install --with-deps chromium
+      - name: Build and serve browser edition
+        run: |
+          mkdir -p .browser-public/static
+          cp browser/index.html .browser-public/
+          cp browser/*.js .browser-public/static/
+          cp static/style.css static/favicon.svg .browser-public/static/
+          python -m http.server 8765 --bind 127.0.0.1 --directory .browser-public > /tmp/campus-browser-server.log 2>&1 &
+      - name: Exercise real browser flows
+        run: node scripts/check-browser.mjs
+      - name: Preserve desktop and mobile verification images
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: browser-edition-qa
+          path: browser-qa/
+          if-no-files-found: warn
+          retention-days: 30

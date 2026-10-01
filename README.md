@@ -2,13 +2,17 @@
 
 A personal internship application tracker with real accounts and a relational database.
 
-**Source:** published on GitHub. **Live demo:** database ready; final Render connection pending.
+**Free browser edition:** deployment in progress. **Account edition:** [live on Render](https://vishnu-campustrack.onrender.com), backed by a free trial database that expires on 31 October 2026.
 
 [Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/screenshot-mobile.png)
 
 ![Desktop preview](docs/screenshot-desktop.png)
 
 [![Python tests](https://github.com/me-vishnurnair/campustrack/actions/workflows/tests.yml/badge.svg)](https://github.com/me-vishnurnair/campustrack/actions/workflows/tests.yml)
+
+## Free browser edition
+
+The new `browser/` edition saves your board on the same browser/device and includes JSON backup/restore and CSV export. It uses static hosting and needs no expiring database. [Usage, privacy, deployment and recovery](browser/README.md). The existing account-based Python application remains available separately.
 
 ## Features
 
