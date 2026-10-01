@@ -2,7 +2,11 @@
 
 A personal internship application tracker with real accounts and a relational database.
 
-**Status:** implemented and checked locally. Public publication is approved; GitHub upload and deployment are blocked on account access. **Live demo:** not deployed; no URL claimed.
+**Status:** local implementation verified. **Live demo:** deployment pending.
+
+[Quick start](#run-locally) · [Engineering decisions](#engineering-decisions) · [Code walkthrough](docs/EXPLAINED.md) · [Mobile preview](docs/screenshot-mobile.png)
+
+![Desktop preview](docs/screenshot-desktop.png)
 
 ## Features
 
@@ -12,6 +16,19 @@ A personal internship application tracker with real accounts and a relational da
 - Export CSV with protection against spreadsheet formula injection.
 - Explore a clearly labelled fictional sample board without creating an account.
 - Owner-scoped database queries, expiring hashed sessions, CSRF checks, input limits and login throttling.
+
+## Engineering decisions
+
+Account isolation is part of the data model.
+
+| Decision | Reason |
+| --- | --- |
+| Ownership at the query boundary | Every application operation is scoped to the signed-in owner; hiding a button is not an authorization check. |
+| Sessions stored by hash | Passwords use salted scrypt and session tokens are stored as hashes, with expiry and a bounded number of sessions. |
+| Durable hosted storage | SQLite keeps local setup small; production requires PostgreSQL instead of a temporary server filesystem. |
+| CSV as an input boundary | Exported user text is handled to reduce spreadsheet formula injection. |
+
+**Recorded local verification:** 4 passing backend tests, plus browser and mobile checks. [Test output](docs/test-results.txt). Hosted CI and deployment checks are still pending.
 
 ## Tech stack
 
@@ -38,7 +55,7 @@ Open **http://127.0.0.1:8000**. Interactive API documentation is at **/docs**, a
 .venv\Scripts\python -m pytest -q
 ```
 
-GitHub Actions runs these tests on pushes and pull requests. Direct dependencies are pinned to the versions tested for this release.
+The included GitHub Actions workflow is configured to run these tests on pushes and pull requests; a hosted run has not yet been verified. Direct dependencies are pinned to the versions tested for this release.
 
 ## Deploy
 
@@ -63,12 +80,6 @@ Production startup refuses an insecure cookie/origin configuration or a local SQ
 This learning release has no email verification, password reset, MFA, administrator console or account deletion screen. Do not use a password reused elsewhere. Sessions expire after 24 hours. There are up to five retained sessions per account and 500 applications per account. Rate limits are per process; use one worker. Before horizontal scaling, use a shared limiter and a proper schema migration workflow. `create_all` initializes tables; it is not a schema migration system.
 
 The sample board uses fictional companies and stores changes only in browser memory. Real account records go to the database. No analytics or external data service is used.
-
-## Screenshots
-
-![Desktop application](docs/screenshot-desktop.png)
-
-[Mobile screenshot](docs/screenshot-mobile.png)
 
 ## Understand the code
 
